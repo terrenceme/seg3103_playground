@@ -39,8 +39,8 @@ class TwitterTest {
     void mock_partial_object() {
 
         Twitter twitter = partialMockBuilder(Twitter.class)
-          .addMockedMethod("loadTweet")
-          .createMock();
+                .addMockedMethod("loadTweet")
+                .createMock();
 
         expect(twitter.loadTweet()).andReturn("hello @me").times(2);
         replay(twitter);
@@ -54,31 +54,62 @@ class TwitterTest {
         assertEquals(false, actual);
     }
 
-    // @Test
-    // void isMentionned_lookForAtSymbol() {
-    //   // Assuming a tweet like "hello @me"
-    //   // isMentionned("me") should be true
-    //   // isMentionned("you") should be false
-    // }
+    @Test
+    void isMentionned_lookForAtSymbol() {
+        Twitter twitter = new Twitter();
 
-    // @Test
-    // void isMentionned_dontReturnSubstringMatches() {
-    //   // Assuming a tweet like "hello @meat"
-    //   // isMentionned("me") should be false
-    //   // isMentionned("meat") should be true
-    // }
+        boolean actualMe = twitter.isMentionned("me");
+        boolean actualYou = twitter.isMentionned("you");
 
-    // @Test
-    // void isMentionned_superStringNotFound() {
-    //   // Assuming a tweet like "hello @me"
-    //   // isMentionned("me") should be true
-    //   // isMentionned("meat") should be false
-    // }
+        assertEquals(true, actualMe);
+        assertEquals(false, actualYou);
+    }
 
-    // @Test
-    // void isMentionned_handleNull() {
-    //   // Assuming no tweet is available (i.e. null)
-    //   // isMentionned("me") should be false
-    //   // isMentionned("meat") should be false
-    // }
+    @Test
+    void isMentionned_dontReturnSubstringMatches() {
+        Twitter twitter = partialMockBuilder(Twitter.class)
+                .addMockedMethod("loadTweet")
+                .createMock();
+
+        expect(twitter.loadTweet()).andReturn("hello @meat").times(2);
+        replay(twitter);
+
+        boolean actualMe = twitter.isMentionned("me");
+        boolean actualMeat = twitter.isMentionned("meat");
+
+        assertEquals(false, actualMe);
+        assertEquals(true, actualMeat);
+    }
+
+    @Test
+    void isMentionned_superStringNotFound() {
+        Twitter twitter = partialMockBuilder(Twitter.class)
+                .addMockedMethod("loadTweet")
+                .createMock();
+
+        expect(twitter.loadTweet()).andReturn("hello @me").times(2);
+        replay(twitter);
+
+        boolean actualMe = twitter.isMentionned("me");
+        boolean actualMeat = twitter.isMentionned("meat");
+
+        assertEquals(true, actualMe);
+        assertEquals(false, actualMeat);
+    }
+
+    @Test
+    void isMentionned_handleNull() {
+        Twitter twitter = partialMockBuilder(Twitter.class)
+                .addMockedMethod("loadTweet")
+                .createMock();
+
+        expect(twitter.loadTweet()).andReturn(null).times(2);
+        replay(twitter);
+
+        boolean actualMe = twitter.isMentionned("me");
+        boolean actualMeat = twitter.isMentionned("meat");
+
+        assertEquals(false, actualMe);
+        assertEquals(false, actualMeat);
+    }
 }
