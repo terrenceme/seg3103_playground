@@ -1,0 +1,7 @@
+To run application:
+```./bin/run```
+
+
+Bug 3 explanation:
+By calling the class windowClosing(...) as a inner class, we are allowing this inner to be referenceable to the entire outer class which impacts the performance negatively.
+
